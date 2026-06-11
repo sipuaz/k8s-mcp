@@ -1,0 +1,32 @@
+{
+  "name": "k8s-mcp",
+  "version": "0.1.0",
+  "description": "Read-only Kubernetes diagnostics MCP server. Requires explicit kube context selection before cluster access. Provides summary-first observability with non-mutating logs and port-forward support.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sipuaz/k8s-mcp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/sipuaz/k8s-mcp/issues"
+  },
+  "homepage": "https://github.com/sipuaz/k8s-mcp#readme",
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
+  }
+}
