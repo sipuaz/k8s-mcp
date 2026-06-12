@@ -19,7 +19,7 @@ function createLogger(options: LoggerOptions): Logger {
         timestamp: new Date().toISOString(),
         ...options.baseContext,
         ...boundContext,
-        ...fields,
+        ...(fields ? { fields } : {}),
       };
       options.transport.write(options.formatter.format(record));
     }
