@@ -1,5 +1,5 @@
-import * as k8s from '@kubernetes/client-node';
-import type { Logger } from '../logging/type.js';
+import { type Context, KubeConfig } from '@kubernetes/client-node';
+import { type Logger } from '../logging/type.js';
 import { type KubeState } from '../mcp/state/kubeState.js';
 
 /**
@@ -22,7 +22,7 @@ interface KubeConfigManager {
      * @param contextName the name of the context to retrieve
      * @returns the context object for the given context name, or null if not found
      */
-    getContext(contextName: string) : k8s.Context | null;
+    getContext(contextName: string) : Context | null;
     /**
      * Sets the current context in the kubeconfig.
      * @param contextName the name of the context to set as current
@@ -37,7 +37,7 @@ interface KubeConfigManager {
  * @param log the logger instance to use for logging errors
  * @throws an error if the context is not found in the kubeconfig
  */
-const validateContextOrThrow = (kc: k8s.KubeConfig, contextName: string, log: Logger) => {
+const validateContextOrThrow = (kc: KubeConfig, contextName: string, log: Logger) => {
     const context = kc.getContextObject(contextName);
     if (!context) {
         const errorMessage = `Context ${contextName} not found in kubeconfig`;
@@ -53,7 +53,7 @@ const validateContextOrThrow = (kc: k8s.KubeConfig, contextName: string, log: Lo
 function createKubeConfigManager(logger: Logger, kubeState: KubeState): KubeConfigManager {
     const log = logger.child({ component: 'KubeConfig' });
     
-    const kc = new k8s.KubeConfig();
+    const kc = new KubeConfig();
     try {
         kc.loadFromDefault();
     } catch (error: unknown) {
