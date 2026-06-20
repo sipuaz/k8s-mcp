@@ -15,16 +15,12 @@ class KubernetesClient {
     private storageV1Api:    StorageV1Api;
 
     /**
-     * Creates a new instance of KubernetesClient for the given context.
-     * @param context The Kubernetes context to use for API requests.
+     * Creates a new instance of KubernetesClient for the given KubeConfig.
+     * @param kc The KubeConfig instance to use for API requests.
      * @param logger The logger instance to use for logging.
      */
-    public constructor(context: Context, logger: Logger) {
-        this.log = logger.child({ component: 'KubernetesClient', context: context.name });
-
-        const kc = new KubeConfig();
-        kc.loadFromDefault();
-        kc.setCurrentContext(context.name);
+    public constructor(kc: KubeConfig, logger: Logger) {
+        this.log = logger.child({ component: 'KubernetesClient', context: kc.getCurrentContext() });
 
         this.coreV1Api       = kc.makeApiClient(CoreV1Api);
         this.appsV1Api       = kc.makeApiClient(AppsV1Api);
@@ -72,4 +68,14 @@ class KubernetesClient {
     }
 }
 
-export { KubernetesClient }
+/**
+ * Factory function to create a new instance of KubernetesClient.
+ * @param kc The KubeConfig instance to use for API requests.
+ * @param logger The logger instance to use for logging.
+ * @returns A new instance of KubernetesClient.
+ */
+function createKubernetesClient(kc: KubeConfig, logger: Logger): KubernetesClient {
+    return new KubernetesClient(kc, logger)
+}
+
+export { KubernetesClient, createKubernetesClient }

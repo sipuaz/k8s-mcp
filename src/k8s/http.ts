@@ -10,8 +10,7 @@ type FailureResult = {
     ok: false,
     statusCode: number,
     code: string,
-    message: string,
-    details?: unknown,
+    message: string
 }
 
 /**
@@ -71,7 +70,6 @@ function convertK8sErrorToHttpResponse(error: unknown): FailureResult {
         statusCode,
         code,
         message,
-        details: error,
     }
 }
 
