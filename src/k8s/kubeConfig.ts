@@ -7,6 +7,11 @@ import { type KubeState } from '../mcp/state/kubeState.js';
  */
 interface KubeConfigManager {
     /**
+     * Returns the underlying KubeConfig instance.
+     * @returns the KubeConfig instance
+     */
+    getKubeConfig(): KubeConfig;
+    /**
      * Returns a list of all context names available in the kubeconfig.
      * @returns the list of context names in the kubeconfig
      */
@@ -62,6 +67,7 @@ function createKubeConfigManager(logger: Logger, kubeState: KubeState): KubeConf
     }
 
     return {
+        getKubeConfig: () => kc,
         listContexts: () => kc.getContexts().map(c => c.name),
         validateContext: (contextName: string) => validateContextOrThrow(kc, contextName, log),
         getContext: (contextName: string) => kc.getContextObject(contextName),

@@ -7,6 +7,7 @@ import { prettyFormatter } from "./logging/formatter.js";
 import { createKubeState } from "./mcp/state/kubeState.js";
 import { createKubeConfigManager } from "./k8s/kubeConfig.js";
 import { registerListContextsTool, registerSetContextTool } from "./mcp/tools/k8s/context.js";
+import { createLazyK8sClientProvider } from "./k8s/clientProvider.js";
 
 const logger = createLogger({
     level: "info",
@@ -15,6 +16,11 @@ const logger = createLogger({
 });
 const kubeState = createKubeState();
 const kubeConfigManager = createKubeConfigManager(logger, kubeState);
+const getK8sClient = createLazyK8sClientProvider({
+    kubeState,
+    kubeConfigManager,
+    logger,
+});
 
 async function main(): Promise<void> {
     const server = newMcpServer();
@@ -23,6 +29,8 @@ async function main(): Promise<void> {
     registerPingTool(server);
     registerListContextsTool(server, kubeConfigManager);
     registerSetContextTool(server, kubeConfigManager);
+    //TODO use this inside the tools that need to interact with k8s, instead of creating clients directly in the tools
+    void getK8sClient;
 
     await server.connect(transport);
 }

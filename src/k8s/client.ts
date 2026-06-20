@@ -1,4 +1,4 @@
-import { CoreV1Api, AppsV1Api, NetworkingV1Api, StorageV1Api, type Context, KubeConfig } from '@kubernetes/client-node/';
+import { CoreV1Api, AppsV1Api, NetworkingV1Api, StorageV1Api, KubeConfig, BatchV1Api } from '@kubernetes/client-node';
 import type { Logger } from '../logging/type.js';
 import { toSuccessResponse, convertK8sErrorToHttpResponse, type SuccessResult, type FailureResult } from './http.js';
 
@@ -13,6 +13,7 @@ class KubernetesClient {
     private appsV1Api:       AppsV1Api;
     private networkingV1Api: NetworkingV1Api;
     private storageV1Api:    StorageV1Api;
+    private batchV1Api:      BatchV1Api;
 
     /**
      * Creates a new instance of KubernetesClient for the given KubeConfig.
@@ -26,6 +27,7 @@ class KubernetesClient {
         this.appsV1Api       = kc.makeApiClient(AppsV1Api);
         this.networkingV1Api = kc.makeApiClient(NetworkingV1Api);
         this.storageV1Api    = kc.makeApiClient(StorageV1Api);
+        this.batchV1Api      = kc.makeApiClient(BatchV1Api);
     }
 
     public getCoreV1Api(): CoreV1Api {
@@ -42,6 +44,10 @@ class KubernetesClient {
 
     public getStorageV1Api(): StorageV1Api {
         return this.storageV1Api
+    }
+
+    public getBatchV1Api(): BatchV1Api {
+        return this.batchV1Api
     }
 
     public resolveNamespace(namespace?: string): string | undefined {
